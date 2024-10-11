@@ -1,24 +1,21 @@
 import random
 
-
-class UacExistsError(Exception):
-    pass
+from uac_generator.uac_store import UacExistsError, UacStore
 
 
 class UacGenerator:
-    def __init__(self, character_set, length, max_attempts):
+    def __init__(
+        self, character_set: list, length: int, max_attempts: int, store: UacStore
+    ):
         self.character_set = [str(c) for c in set(character_set)]
         self.length = length
         self.max_attempts = max_attempts
-        self.uacs = set()
+        self.store = store
 
-    def store_uac(self, uac):
-        if uac in self.uacs:
-            raise UacExistsError
-        else:
-            self.uacs.add(uac)
+    def store_uac(self, uac: str) -> None:
+        self.store.add(uac)
 
-    def generate_uac(self):
+    def generate_uac(self) -> str:
         uac = "".join(
             [
                 self.character_set[random.randrange(len(self.character_set))]
@@ -28,7 +25,7 @@ class UacGenerator:
         self.store_uac(uac)
         return uac
 
-    def new_uac(self, attempt=0):
+    def new_uac(self, attempt: int = 0) -> str:
         if attempt > self.max_attempts:
             raise ValueError(f"Unable to generate UAC in {self.max_attempts} attempts")
         try:

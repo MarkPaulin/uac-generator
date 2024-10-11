@@ -31,3 +31,5 @@ def test_file_uac_store_stores_uacs(tmpdir):
     assert all(store.uac_exists(uac) for uac in uacs)
     new_store = FileUacStore(file)
     assert all(new_store.uac_exists(uac) for uac in uacs)
+    with pytest.raises(UacExistsError):
+        new_store.add("aaa")

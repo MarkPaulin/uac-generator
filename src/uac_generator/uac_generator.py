@@ -12,23 +12,23 @@ class UacGenerator:
         self.max_attempts = max_attempts
         self.store = store
 
-    def store_uac(self, uac: str) -> None:
-        self.store.add(uac)
+    def store_uac(self, uac: str, case_info: list = None) -> None:
+        self.store.add(uac, case_info)
 
-    def generate_uac(self) -> str:
+    def generate_uac(self, case_info: list = None) -> str:
         uac = "".join(
             [
                 self.character_set[random.randrange(len(self.character_set))]
                 for i in range(self.length)
             ]
         )
-        self.store_uac(uac)
+        self.store_uac(uac, case_info)
         return uac
 
-    def new_uac(self, attempt: int = 0) -> str:
+    def new_uac(self, case_info: list = None, attempt: int = 0) -> str:
         if attempt > self.max_attempts:
             raise ValueError(f"Unable to generate UAC in {self.max_attempts} attempts")
         try:
-            return self.generate_uac()
+            return self.generate_uac(case_info)
         except UacExistsError:
-            return self.new_uac(attempt + 1)
+            return self.new_uac(case_info, attempt + 1)

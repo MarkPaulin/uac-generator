@@ -5,7 +5,7 @@ from uac_generator.uac_store import UacExistsError, UacStore
 
 class UacGenerator:
     def __init__(
-        self, character_set: list, length: int, max_attempts: int, store: UacStore
+        self, store: UacStore, character_set: list, length: int, max_attempts: int = 5
     ):
         self.character_set = [str(c) for c in set(character_set)]
         self.length = length

@@ -10,10 +10,10 @@ def test_uac_generator_generates_uacs():
     length = 5
     max_attempts = 2
     generator = UacGenerator(
+        store=store,
         character_set=character_set,
         length=length,
         max_attempts=max_attempts,
-        store=store,
     )
 
     uac = generator.new_uac()
@@ -34,10 +34,10 @@ def test_uac_generator_can_use_file_store(tmpdir):
     length = 5
     max_attempts = 2
     generator = UacGenerator(
+        store=store,
         character_set=character_set,
         length=length,
         max_attempts=max_attempts,
-        store=store,
     )
 
     uacs = [generator.new_uac() for i in range(5)]
@@ -53,10 +53,10 @@ def test_uac_generator_throws_error():
     length = 1
     max_attempts = 0
     generator = UacGenerator(
+        store=store,
         character_set=character_set,
         length=length,
         max_attempts=max_attempts,
-        store=store,
     )
 
     with pytest.raises(ValueError):

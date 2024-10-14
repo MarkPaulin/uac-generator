@@ -41,6 +41,7 @@ def test_uac_generator_can_use_file_store(tmpdir):
     )
 
     uacs = [generator.new_uac() for i in range(5)]
+    store.save()
     with open(file) as f:
         lines = [line.rstrip() for line in f]
     assert len(lines) == 5

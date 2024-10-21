@@ -26,6 +26,9 @@ class UacStore:
     def save(self) -> None:
         pass
 
+    def fetch_uacs_for_case(self, case_info: list) -> list:
+        pass
+
 
 class FileUacStore(UacStore):
     def __init__(self, file: Path):
@@ -50,6 +53,10 @@ class FileUacStore(UacStore):
             for case in self.new_cases:
                 filewriter.writerow(case)
         self.new_cases = []
+
+    def fetch_uacs_for_case(self, case_info: list) -> list:
+        uac_idx = [i for i, data in enumerate(self.case_info) if case_info == data]
+        return [[self.uacs[i], *self.case_info[i]] for i in uac_idx]
 
 
 class SqlUacStore(UacStore):
@@ -117,3 +124,21 @@ class SqlUacStore(UacStore):
         cur.executemany(insert_template, self.new_cases)
         cur.commit()
         self.new_cases = list()
+
+    def fetch_uacs(self, case_info: list, cols=None) -> list:
+        if cols is None:
+            cols = [col for col in self.columns if col != "uac"]
+        fetch_template = f"""
+        select *
+        from {self.table_name}
+        where {" and ".join(col + " = ?" for col in cols)}
+        """
+
+        con = self.connect()
+        cur = con.cursor()
+        out = []
+        for case in case_info:
+            cur.execute(fetch_template, case)
+            for row in cur:
+                out.append(list(row))
+        return out
